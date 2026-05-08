@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Al-Riaz Electronics</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#e63312;--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;--text:#f0f0f0;--text2:#aaa;--border:#333;--success:#0d8a45;--warning:#d97706}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#0f0f0f,#1a0800);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px;width:340px;text-align:center}
+.login-box .logo-icon{width:56px;height:56px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:#fff}
+.login-box h2{font-size:20px;margin-bottom:4px}
+.login-box p{font-size:13px;color:var(--text2);margin-bottom:28px}
+.login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif;margin-bottom:12px}
+.login-box input:focus{outline:none;border-color:var(--accent)}
+.login-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:4px}
+.login-err{color:#ff6b6b;font-size:13px;margin-top:8px;display:none}
+
+/* MAIN PANEL */
+#adminPanel{display:none}
+.admin-topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.admin-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700}
+.admin-logo span{background:var(--accent);color:#fff;border-radius:6px;padding:3px 10px;font-size:12px}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:7px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px}
+.logout-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.admin-body{max-width:1100px;margin:0 auto;padding:28px 20px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.stat-card .num{font-size:28px;font-weight:700}
+.stat-card .lbl{font-size:12px;color:var(--text2);margin-top:4px}
+.stat-card.red .num{color:var(--accent)}
+.stat-card.green .num{color:#4ade80}
+.stat-card.amber .num{color:#fbbf24}
+
+/* SECTION CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.card h3 i{color:var(--accent)}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:12px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
+.form-group select option{background:var(--bg3)}
+.btn-add{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:7px}
+.btn-add:hover{opacity:0.9}
+
+/* PRODUCTS TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{padding:10px 12px;text-align:left;font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)}
+tbody td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:hover{background:rgba(255,255,255,0.02)}
+.emoji-cell{font-size:22px}
+.price-cell{font-weight:600;color:var(--accent)}
+.badge-cell span{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-sale{background:rgba(230,51,18,0.2);color:#ff8866}
+.badge-new{background:rgba(13,138,69,0.2);color:#4ade80}
+.badge-hot{background:rgba(217,119,6,0.2);color:#fbbf24}
+.badge-none{color:var(--text2)}
+.action-btns{display:flex;gap:6px}
+.edit-btn,.del-btn,.sale-btn{border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:4px}
+.edit-btn{background:rgba(59,130,246,0.15);color:#60a5fa}
+.del-btn{background:rgba(230,51,18,0.15);color:#ff6b6b}
+.sale-btn{background:rgba(217,119,6,0.15);color:#fbbf24}
+
+/* SALE SECTION */
+.sale-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.sale-controls .form-group{min-width:160px}
+.btn-sale{background:var(--warning);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px;width:90%;max-width:500px}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{background:none;border:1px solid var(--border);color:var(--text2);border-radius:7px;padding:9px 18px;cursor:pointer;font-family:'Outfit',sans-serif}
+.btn-save{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:9px 18px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo-icon"><i class="fa-solid fa-lock"></i></div>
+    <h2>Admin Panel</h2>
+    <p>Al-Riaz Electronics — Sirf admin ke liye</p>
+    <input type="text" id="loginUser" placeholder="Username" value="">
+    <input type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> Login Karein</button>
+    <p class="login-err" id="loginErr">❌ Galat username ya password!</p>
+    <p style="font-size:11px;color:var(--text2);margin-top:16px">Default: admin / alriaz123</p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <div class="admin-topbar">
+    <div class="admin-logo">
+      <i class="fa-solid fa-bolt" style="color:var(--accent)"></i>
+      Al-Riaz Electronics <span>ADMIN</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="index.html" target="_blank" style="font-size:13px;color:var(--text2);text-decoration:none"><i class="fa-solid fa-eye"></i> Website Dekhein</a>
+      <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- STATS -->
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <!-- ADD PRODUCT -->
+    <div class="card">
+      <h3><i class="fa-solid fa-plus-circle"></i> Naya Product Add Karein</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Product Ka Naam *</label>
+          <input type="text" id="pName" placeholder="Jaise: Ceiling Fan 56 inch">
+        </div>
+        <div class="form-group">
+          <label>Brand</label>
+          <input type="text" id="pBrand" placeholder="Jaise: GFC, National">
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="pCat">
+            <option value="fan">Fans</option>
+            <option value="chair">Chairs</option>
+            <option value="table">Tables</option>
+            <option value="machine">Machines</option>
+            <option value="mattress">Mattresses</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="beauty">Beauty</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Price (Rs.) *</label>
+          <input type="number" id="pPrice" placeholder="5000">
+        </div>
+        <div class="form-group">
+          <label>Purani Price (Rs.)</label>
+          <input type="number" id="pOld" placeholder="6000">
+        </div>
+        <div class="form-group">
+          <label>Emoji (Product Icon)</label>
+          <input type="text" id="pEmoji" placeholder="🌀 (copy karo)">
+        </div>
+        <div class="form-group">
+          <label>Badge</label>
+          <select id="pBadge">
+            <option value="">Koi nahi</option>
+            <option value="Sale">Sale</option>
+            <option value="New">New</option>
+            <option value="Hot">Hot</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-add" onclick="addProduct()"><i class="fa-solid fa-plus"></i> Product Add Karein</button>
+    </div>
+
+    <!-- SALE Lगाना -->
+    <div class="card">
+      <h3><i class="fa-solid fa-tags"></i> Puri Category Par Sale Lagaein</h3>
+      <div class="sale-controls">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="saleCat">
+            <option value="all">Sab Products</option>
+            <option value="fan">Fans</option>
+            <option value="chair">Chairs</option>
+            <option value="table">Tables</option>
+            <option value="machine">Machines</option>
+            <option value="mattress">Mattresses</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="beauty">Beauty</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Discount %</label>
+          <input type="number" id="salePercent" placeholder="20" min="1" max="90" style="width:100px">
+        </div>
+        <button class="btn-sale" onclick="applySale()"><i class="fa-solid fa-tag"></i> Sale Lagao</button>
+      </div>
+    </div>
+
+    <!-- PRODUCTS LIST -->
+    <div class="card">
+      <h3><i class="fa-solid fa-boxes-stacked"></i> Sab Products Manage Karein <span style="color:var(--text2);font-weight:400;font-size:14px" id="pCount"></span></h3>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <input type="text" id="searchInput" placeholder="🔍 Product search karein..." oninput="renderTable()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;flex:1;min-width:200px">
+        <select id="filterCatAdmin" onchange="renderTable()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif">
+          <option value="all">Sab Categories</option>
+          <option value="fan">Fans</option>
+          <option value="chair">Chairs</option>
+          <option value="table">Tables</option>
+          <option value="machine">Machines</option>
+          <option value="mattress">Mattresses</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="beauty">Beauty</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Icon</th>
+              <th>Naam</th>
+              <th>Brand</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Old Price</th>
+              <th>Badge</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3><i class="fa-solid fa-pen" style="color:var(--accent)"></i> Product Edit Karein</h3>
+    <input type="hidden" id="editId">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Naam</label>
+        <input type="text" id="editName">
+      </div>
+      <div class="form-group">
+        <label>Brand</label>
+        <input type="text" id="editBrand">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="editCat">
+          <option value="fan">Fans</option>
+          <option value="chair">Chairs</option>
+          <option value="table">Tables</option>
+          <option value="machine">Machines</option>
+          <option value="mattress">Mattresses</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="beauty">Beauty</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Price (Rs.)</label>
+        <input type="number" id="editPrice">
+      </div>
+      <div class="form-group">
+        <label>Old Price (Rs.)</label>
+        <input type="number" id="editOld">
+      </div>
+      <div class="form-group">
+        <label>Emoji</label>
+        <input type="text" id="editEmoji">
+      </div>
+      <div class="form-group">
+        <label>Badge</label>
+        <select id="editBadge">
+          <option value="">Koi nahi</option>
+          <option value="Sale">Sale</option>
+          <option value="New">New</option>
+          <option value="Hot">Hot</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEdit()"><i class="fa-solid fa-check"></i> Save Karein</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== AUTH ==========
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'alriaz123';
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if(u===ADMIN_USER && p===ADMIN_PASS) {
+    sessionStorage.setItem('ar_admin','1');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    initAdmin();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('ar_admin');
+  location.reload();
+}
+
+if(sessionStorage.getItem('ar_admin')==='1') {
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
+}
+
+// ========== DATA ==========
+let products = JSON.parse(localStorage.getItem('ar_products') || 'null') || [
+  {id:1,name:"Ceiling Fan 56\"",brand:"GFC",cat:"fan",price:4500,old:5500,rating:4.5,reviews:128,emoji:"🌀",badge:"Sale"},
+  {id:2,name:"Pedestal Fan",brand:"Pak Fan",cat:"fan",price:3200,old:3800,rating:4.3,reviews:89,emoji:"💨",badge:"Hot"},
+  {id:3,name:"Table Fan 12\"",brand:"GFC",cat:"fan",price:1800,old:2200,rating:4.1,reviews:54,emoji:"🌬️",badge:""},
+  {id:4,name:"Revolving Chair",brand:"Local",cat:"chair",price:6500,old:8000,rating:4.2,reviews:43,emoji:"🪑",badge:"New"},
+  {id:5,name:"Office Chair",brand:"Local",cat:"chair",price:5800,old:7000,rating:4.0,reviews:31,emoji:"💺",badge:""},
+  {id:6,name:"Study Table",brand:"WoodCraft",cat:"table",price:7500,old:9000,rating:4.4,reviews:62,emoji:"🪵",badge:"Sale"},
+  {id:7,name:"Washing Machine 8kg",brand:"Dawlance",cat:"machine",price:42000,old:48000,rating:4.6,reviews:215,emoji:"🫧",badge:"Hot"},
+  {id:8,name:"Sewing Machine",brand:"Singer",cat:"machine",price:12000,old:14500,rating:4.3,reviews:77,emoji:"🧵",badge:""},
+  {id:9,name:"Spring Mattress 6\"",brand:"SleepWell",cat:"mattress",price:18000,old:22000,rating:4.5,reviews:93,emoji:"🛏️",badge:"Sale"},
+  {id:10,name:"Foam Mattress",brand:"Master",cat:"mattress",price:9500,old:11000,rating:4.2,reviews:48,emoji:"😴",badge:""},
+  {id:11,name:"Juicer Blender",brand:"National",cat:"kitchen",price:3500,old:4200,rating:4.4,reviews:132,emoji:"🍹",badge:"Hot"},
+  {id:12,name:"Microwave Oven",brand:"Dawlance",cat:"kitchen",price:16500,old:19000,rating:4.5,reviews:178,emoji:"📦",badge:"Sale"},
+  {id:13,name:"Electric Iron",brand:"National",cat:"kitchen",price:2200,old:2800,rating:4.3,reviews:201,emoji:"🧺",badge:""},
+  {id:14,name:"Toaster 2-Slice",brand:"Anex",cat:"kitchen",price:1500,old:1900,rating:4.1,reviews:88,emoji:"🍞",badge:""},
+  {id:15,name:"Hair Straightener",brand:"Kemei",cat:"beauty",price:1800,old:2500,rating:4.2,reviews:145,emoji:"💇",badge:"New"},
+  {id:16,name:"Hair Dryer",brand:"Kemei",cat:"beauty",price:1600,old:2100,rating:4.0,reviews:110,emoji:"💨",badge:""}
+];
+
+function saveProducts() {
+  localStorage.setItem('ar_products', JSON.stringify(products));
+}
+
+function initAdmin() {
+  renderStats();
+  renderTable();
+}
+
+// ========== STATS ==========
+function renderStats() {
+  const total = products.length;
+  const cats = [...new Set(products.map(p=>p.cat))].length;
+  const onSale = products.filter(p=>p.badge==='Sale').length;
+  const minPrice = Math.min(...products.map(p=>p.price));
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card red"><div class="num">${total}</div><div class="lbl">Total Products</div></div>
+    <div class="stat-card amber"><div class="num">${cats}</div><div class="lbl">Categories</div></div>
+    <div class="stat-card green"><div class="num">${onSale}</div><div class="lbl">Sale Par Hain</div></div>
+    <div class="stat-card"><div class="num">Rs.${minPrice.toLocaleString()}</div><div class="lbl">Sab Se Sasta</div></div>`;
+}
+
+// ========== TABLE ==========
+function renderTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const cat = document.getElementById('filterCatAdmin').value;
+  let list = products;
+  if(cat!=='all') list = list.filter(p=>p.cat===cat);
+  if(search) list = list.filter(p=>p.name.toLowerCase().includes(search)||p.brand.toLowerCase().includes(search));
+  document.getElementById('pCount').textContent = `(${list.length} products)`;
+  const catNames={fan:'Fan',chair:'Chair',table:'Table',machine:'Machine',mattress:'Mattress',kitchen:'Kitchen',beauty:'Beauty'};
+  document.getElementById('productsTable').innerHTML = list.map(p=>`
+    <tr>
+      <td class="emoji-cell">${p.emoji}</td>
+      <td style="font-weight:500">${p.name}</td>
+      <td style="color:var(--text2)">${p.brand}</td>
+      <td>${catNames[p.cat]||p.cat}</td>
+      <td class="price-cell">Rs. ${p.price.toLocaleString()}</td>
+      <td style="color:var(--text2)">Rs. ${p.old.toLocaleString()}</td>
+      <td class="badge-cell">${p.badge?`<span class="badge-${p.badge.toLowerCase()}">${p.badge}</span>`:`<span class="badge-none">—</span>`}</td>
+      <td>
+        <div class="action-btns">
+          <button class="edit-btn" onclick="openEdit(${p.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="del-btn" onclick="delProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ========== ADD PRODUCT ==========
+function addProduct() {
+  const name = document.getElementById('pName').value.trim();
+  const price = parseInt(document.getElementById('pPrice').value);
+  if(!name || !price) {showToast('❌ Naam aur price zaroor darain!');return;}
+  const newId = products.length ? Math.max(...products.map(p=>p.id))+1 : 1;
+  products.push({
+    id: newId,
+    name,
+    brand: document.getElementById('pBrand').value.trim()||'Local',
+    cat: document.getElementById('pCat').value,
+    price,
+    old: parseInt(document.getElementById('pOld').value)||Math.round(price*1.2),
+    rating: 4.0,
+    reviews: 0,
+    emoji: document.getElementById('pEmoji').value.trim()||'📦',
+    badge: document.getElementById('pBadge').value
+  });
+  saveProducts();
+  renderStats();
+  renderTable();
+  ['pName','pBrand','pPrice','pOld','pEmoji'].forEach(id=>document.getElementById(id).value='');
+  showToast(`✅ "${name}" add ho gaya!`);
+}
+
+// ========== DELETE ==========
+function delProduct(id) {
+  if(!confirm('Kya aap wakai yeh product delete karna chahte hain?')) return;
+  products = products.filter(p=>p.id!==id);
+  saveProducts();
+  renderStats();
+  renderTable();
+  showToast('🗑️ Product delete ho gaya!');
+}
+
+// ========== EDIT ==========
+function openEdit(id) {
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('editName').value = p.name;
+  document.getElementById('editBrand').value = p.brand;
+  document.getElementById('editCat').value = p.cat;
+  document.getElementById('editPrice').value = p.price;
+  document.getElementById('editOld').value = p.old;
+  document.getElementById('editEmoji').value = p.emoji;
+  document.getElementById('editBadge').value = p.badge;
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+}
+
+function saveEdit() {
+  const id = parseInt(document.getElementById('editId').value);
+  const idx = products.findIndex(p=>p.id===id);
+  if(idx===-1) return;
+  products[idx] = {
+    ...products[idx],
+    name: document.getElementById('editName').value,
+    brand: document.getElementById('editBrand').value,
+    cat: document.getElementById('editCat').value,
+    price: parseInt(document.getElementById('editPrice').value),
+    old: parseInt(document.getElementById('editOld').value),
+    emoji: document.getElementById('editEmoji').value,
+    badge: document.getElementById('editBadge').value
+  };
+  saveProducts();
+  renderStats();
+  renderTable();
+  closeModal();
+  showToast('✅ Product update ho gaya!');
+}
+
+// ========== SALE ==========
+function applySale() {
+  const cat = document.getElementById('saleCat').value;
+  const pct = parseInt(document.getElementById('salePercent').value);
+  if(!pct||pct<1||pct>90) {showToast('❌ Discount % sahi darain (1-90)!');return;}
+  let count = 0;
+  products.forEach(p=>{
+    if(cat==='all'||p.cat===cat){
+      p.old = p.price;
+      p.price = Math.round(p.price*(1-pct/100));
+      p.badge = 'Sale';
+      count++;
+    }
+  });
+  saveProducts();
+  renderStats();
+  renderTable();
+  showToast(`🎉 ${count} products par ${pct}% sale laga di!`);
+}
+
+// ========== TOAST ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+if(sessionStorage.getItem('ar_admin')==='1') initAdmin();
+</script>
+</body>
+</html>

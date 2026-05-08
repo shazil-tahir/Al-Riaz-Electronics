@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al-Riaz Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#e63312;--accent2:#ff6b35;
+  --bg:#f5f4f0;--bg2:#ffffff;--bg3:#f0ede8;
+  --text:#1a1a1a;--text2:#555;--text3:#888;
+  --border:#e0ddd8;--radius:12px;
+}
+[data-theme="dark"]{
+  --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#222;
+  --text:#f0ede8;--text2:#aaa;--text3:#666;
+  --border:#333;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);transition:background 0.3s,color 0.3s}
+
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.logo-name{font-size:17px;font-weight:700;line-height:1.1}
+.logo-sub{font-size:11px;color:var(--text3)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.icon-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;transition:all 0.2s}
+.icon-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cart-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;white-space:nowrap}
+.cart-badge{background:#fff;color:var(--accent);border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a0800 0%,#3d1200 50%,#6e2200 100%);padding:56px 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;background:rgba(230,51,18,0.12);border-radius:50%}
+.hero::after{content:'';position:absolute;left:-40px;bottom:-60px;width:200px;height:200px;background:rgba(230,51,18,0.07);border-radius:50%}
+.hero-left{z-index:1;max-width:540px}
+.hero-badge{background:rgba(230,51,18,0.25);color:#ffaa80;border:1px solid rgba(230,51,18,0.4);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;margin-bottom:18px}
+.hero h1{font-size:36px;font-weight:800;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero h1 span{color:var(--accent2)}
+.hero p{font-size:15px;color:rgba(255,255,255,0.6);margin-bottom:24px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:transform 0.15s}
+.btn-primary:hover{transform:scale(1.03)}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:13px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif}
+.hero-stats{display:flex;gap:32px;z-index:1;flex-shrink:0}
+.stat-num{font-size:30px;font-weight:800;color:#fff}
+.stat-label{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-title{font-size:21px;font-weight:700}
+.section-title span{color:var(--accent)}
+.see-all{font-size:13px;color:var(--accent);cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;font-weight:600;display:flex;align-items:center;gap:4px}
+
+/* CATEGORIES */
+.cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:28px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat-chip{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--text2);display:flex;align-items:center;gap:7px;transition:all 0.2s;font-family:'Outfit',sans-serif}
+.cat-chip:hover,.cat-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* PRODUCTS */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.product-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform 0.18s,border-color 0.18s}
+.product-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.product-img{width:100%;height:150px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:58px;position:relative}
+.badge{position:absolute;top:9px;left:9px;border-radius:5px;padding:3px 9px;font-size:10px;font-weight:700}
+.badge-sale{background:var(--accent);color:#fff}
+.badge-new{background:#0d8a45;color:#fff}
+.badge-hot{background:#d97706;color:#fff}
+.product-info{padding:13px}
+.product-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.product-brand{font-size:12px;color:var(--text3);margin-bottom:7px}
+.stars{color:#f59e0b;font-size:12px}
+.review-count{font-size:11px;color:var(--text3)}
+.price-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.price{font-size:16px;font-weight:700;color:var(--accent)}
+.old-price{font-size:11px;color:var(--text3);text-decoration:line-through;margin-top:1px}
+.add-btn{background:var(--accent);color:#fff;border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+
+/* PROMO BANNER */
+.promo-banner{background:linear-gradient(135deg,#0a1628,#1e3a5f);border-radius:14px;padding:28px 36px;margin:28px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.promo-text h3{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
+.promo-text p{color:rgba(255,255,255,0.55);font-size:14px}
+.promo-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:18px 28px;text-align:center;flex-shrink:0}
+.promo-disc{font-size:36px;font-weight:800;color:#5bc8ff}
+.promo-disc-lbl{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px 24px;margin-top:40px}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px}
+footer h4{font-size:14px;font-weight:700;margin-bottom:14px}
+footer a,footer p{font-size:13px;color:var(--text2);display:block;margin-bottom:7px;text-decoration:none}
+footer a:hover{color:var(--accent)}
+.footer-bottom{max-width:1200px;margin:24px auto 0;border-top:1px solid var(--border);padding-top:18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer-bottom p{font-size:12px;color:var(--text3)}
+
+/* CART DRAWER */
+.cart-overlay{display:none;position:fixed;top:0;right:0;width:320px;height:100vh;background:var(--bg2);border-left:1px solid var(--border);z-index:999;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,0.15)}
+.cart-overlay.open{display:flex}
+.cart-hdr{padding:18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cart-hdr h3{font-size:16px;font-weight:700}
+.close-btn{background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px}
+.cart-body{flex:1;overflow-y:auto;padding:16px}
+.cart-empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:14px}
+.cart-empty i{font-size:44px;display:block;margin-bottom:12px;opacity:0.4}
+.cart-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center}
+.ci-emoji{font-size:28px;width:46px;height:46px;background:var(--bg3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-info{flex:1}
+.ci-name{font-size:13px;font-weight:600}
+.ci-price{font-size:13px;color:var(--accent);font-weight:600}
+.ci-qty{font-size:12px;color:var(--text3)}
+.remove-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:4px}
+.remove-btn:hover{color:var(--accent)}
+.cart-ftr{padding:16px;border-top:1px solid var(--border)}
+.cart-total{display:flex;justify-content:space-between;font-size:15px;font-weight:700;margin-bottom:14px}
+.checkout-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 22px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+@media(max-width:600px){
+  .topbar{padding:10px 14px}
+  .hero{padding:36px 16px}
+  .hero h1{font-size:26px}
+  .hero-stats{gap:18px}
+  .main{padding:20px 12px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+    <div>
+      <div class="logo-name">Al-Riaz Electronics</div>
+      <div class="logo-sub">Pakistan's Trusted Store</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Dark/Light Mode"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+    <button class="cart-btn" onclick="openCart()">
+      <i class="fa-solid fa-cart-shopping"></i>
+      Cart <span class="cart-badge" id="cartCount">0</span>
+    </button>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><i class="fa-solid fa-star"></i> Pakistan No.1 Electronics Store</div>
+    <h1>Quality Electronics<br>at <span>Best Prices</span></h1>
+    <p>Fans, Appliances, Furniture & More — Sab kuch ek jagah, best prices ke saath!</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">Shop Now <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="btn-ghost">Deals Dekhein</button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num">500+</div><div class="stat-label">Products</div></div>
+    <div><div class="stat-num">10K+</div><div class="stat-label">Customers</div></div>
+    <div><div class="stat-num">5★</div><div class="stat-label">Rating</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="products-section">
+    <div class="section-hdr" style="margin-bottom:16px"><div class="section-title">Shop by <span>Category</span></div></div>
+    <div class="cats" id="catContainer"></div>
+    <div class="section-hdr">
+      <div class="section-title">Our <span>Products</span></div>
+      <button class="see-all" onclick="filterCat('all')">Sab dekhein <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+
+  <div class="promo-banner">
+    <div class="promo-text">
+      <h3>🎉 Eid Special Sale!</h3>
+      <p>Ghar ki tamam zaroori cheezein — best prices ke saath sirf Al-Riaz par!</p>
+    </div>
+    <div class="promo-badge">
+      <div class="promo-disc">30%</div>
+      <div class="promo-disc-lbl">Special Discount</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>Al-Riaz Electronics</h4>
+      <p>Pakistan ka trusted electronics aur home appliances store. Quality products, best prices.</p>
+      <p style="margin-top:10px;font-weight:600;color:var(--text)"><i class="fa-solid fa-phone"></i> 0300-1234567</p>
+      <p><i class="fa-brands fa-whatsapp" style="color:#25d366"></i> WhatsApp Available</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <a href="#">Home</a>
+      <a href="#">All Products</a>
+      <a href="#">Offers & Deals</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <div>
+      <h4>Categories</h4>
+      <a href="#">Fans & Coolers</a>
+      <a href="#">Kitchen Appliances</a>
+      <a href="#">Furniture</a>
+      <a href="#">Beauty & Care</a>
+      <a href="#">Machines</a>
+    </div>
+    <div>
+      <h4>Customer Service</h4>
+      <a href="#">Return Policy</a>
+      <a href="#">Warranty Info</a>
+      <a href="#">Track Order</a>
+      <a href="#">FAQ</a>
+      <a href="admin.html" style="color:var(--accent);font-weight:600"><i class="fa-solid fa-lock"></i> Admin Panel</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Al-Riaz Electronics. All rights reserved.</p>
+    <p>Made with ❤️ in Pakistan</p>
+  </div>
+</footer>
+
+<div class="cart-overlay" id="cartOverlay">
+  <div class="cart-hdr">
+    <h3><i class="fa-solid fa-cart-shopping"></i> Aapka Cart</h3>
+    <button class="close-btn" onclick="closeCart()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty"><i class="fa-solid fa-cart-shopping"></i>Cart khali hai!<br><small>Koi product add karein</small></div>
+  </div>
+  <div class="cart-ftr" id="cartFtr" style="display:none">
+    <div class="cart-total"><span>Total:</span><span id="cartTotal" style="color:var(--accent)">Rs. 0</span></div>
+    <button class="checkout-btn" onclick="checkout()">Order Place Karein <i class="fa-solid fa-check"></i></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== PRODUCTS DATA ==========
+// Admin panel se yeh data automatically update hoga
+let products = JSON.parse(localStorage.getItem('ar_products') || 'null') || [
+  {id:1,name:"Ceiling Fan 56\"",brand:"GFC",cat:"fan",price:4500,old:5500,rating:4.5,reviews:128,emoji:"🌀",badge:"Sale"},
+  {id:2,name:"Pedestal Fan",brand:"Pak Fan",cat:"fan",price:3200,old:3800,rating:4.3,reviews:89,emoji:"💨",badge:"Hot"},
+  {id:3,name:"Table Fan 12\"",brand:"GFC",cat:"fan",price:1800,old:2200,rating:4.1,reviews:54,emoji:"🌬️",badge:""},
+  {id:4,name:"Revolving Chair",brand:"Local",cat:"chair",price:6500,old:8000,rating:4.2,reviews:43,emoji:"🪑",badge:"New"},
+  {id:5,name:"Office Chair",brand:"Local",cat:"chair",price:5800,old:7000,rating:4.0,reviews:31,emoji:"💺",badge:""},
+  {id:6,name:"Study Table",brand:"WoodCraft",cat:"table",price:7500,old:9000,rating:4.4,reviews:62,emoji:"🪵",badge:"Sale"},
+  {id:7,name:"Washing Machine 8kg",brand:"Dawlance",cat:"machine",price:42000,old:48000,rating:4.6,reviews:215,emoji:"🫧",badge:"Hot"},
+  {id:8,name:"Sewing Machine",brand:"Singer",cat:"machine",price:12000,old:14500,rating:4.3,reviews:77,emoji:"🧵",badge:""},
+  {id:9,name:"Spring Mattress 6\"",brand:"SleepWell",cat:"mattress",price:18000,old:22000,rating:4.5,reviews:93,emoji:"🛏️",badge:"Sale"},
+  {id:10,name:"Foam Mattress",brand:"Master",cat:"mattress",price:9500,old:11000,rating:4.2,reviews:48,emoji:"😴",badge:""},
+  {id:11,name:"Juicer Blender",brand:"National",cat:"kitchen",price:3500,old:4200,rating:4.4,reviews:132,emoji:"🍹",badge:"Hot"},
+  {id:12,name:"Microwave Oven",brand:"Dawlance",cat:"kitchen",price:16500,old:19000,rating:4.5,reviews:178,emoji:"📦",badge:"Sale"},
+  {id:13,name:"Electric Iron",brand:"National",cat:"kitchen",price:2200,old:2800,rating:4.3,reviews:201,emoji:"🧺",badge:""},
+  {id:14,name:"Toaster 2-Slice",brand:"Anex",cat:"kitchen",price:1500,old:1900,rating:4.1,reviews:88,emoji:"🍞",badge:""},
+  {id:15,name:"Hair Straightener",brand:"Kemei",cat:"beauty",price:1800,old:2500,rating:4.2,reviews:145,emoji:"💇",badge:"New"},
+  {id:16,name:"Hair Dryer",brand:"Kemei",cat:"beauty",price:1600,old:2100,rating:4.0,reviews:110,emoji:"💨",badge:""}
+];
+
+const categories = [
+  {id:'all',label:'All Products',icon:'fa-border-all'},
+  {id:'fan',label:'Fans',icon:'fa-wind'},
+  {id:'chair',label:'Chairs',icon:'fa-chair'},
+  {id:'table',label:'Tables',icon:'fa-table'},
+  {id:'machine',label:'Machines',icon:'fa-gears'},
+  {id:'mattress',label:'Mattresses',icon:'fa-bed'},
+  {id:'kitchen',label:'Kitchen',icon:'fa-blender'},
+  {id:'beauty',label:'Beauty',icon:'fa-sparkles'}
+];
+
+let cart = JSON.parse(localStorage.getItem('ar_cart') || '[]');
+let activecat = 'all';
+
+function renderCats() {
+  document.getElementById('catContainer').innerHTML = categories.map(c =>
+    `<button class="cat-chip ${c.id===activecat?'active':''}" onclick="filterCat('${c.id}',this)"><i class="fa-solid ${c.icon}"></i> ${c.label}</button>`
+  ).join('');
+}
+
+function renderProducts(list) {
+  const g = document.getElementById('productsGrid');
+  if(!list.length){g.innerHTML='<p style="color:var(--text3);padding:20px">Is category mein abhi koi product nahi hai.</p>';return;}
+  g.innerHTML = list.map(p => `
+    <div class="product-card" onclick="addToCart(${p.id})">
+      <div class="product-img">
+        ${p.badge?`<span class="badge badge-${p.badge.toLowerCase()}">${p.badge}</span>`:''}
+        <span>${p.emoji}</span>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-brand">${p.brand}</div>
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">
+          <span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))}</span>
+          <span class="review-count">(${p.reviews})</span>
+        </div>
+        <div class="price-row">
+          <div>
+            <div class="price">Rs. ${p.price.toLocaleString()}</div>
+            <div class="old-price">Rs. ${p.old.toLocaleString()}</div>
+          </div>
+          <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterCat(cat,btn) {
+  activecat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else{const chips=document.querySelectorAll('.cat-chip');if(chips[0])chips[0].classList.add('active');}
+  renderProducts(cat==='all'?products:products.filter(p=>p.cat===cat));
+}
+
+function addToCart(id) {
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  const ex = cart.find(x=>x.id===id);
+  if(ex) ex.qty++; else cart.push({...p,qty:1});
+  localStorage.setItem('ar_cart', JSON.stringify(cart));
+  updateCartUI();
+  showToast(`✅ ${p.name} cart mein add ho gaya!`);
+}
+
+function removeItem(id) {
+  cart = cart.filter(x=>x.id!==id);
+  localStorage.setItem('ar_cart', JSON.stringify(cart));
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const count = cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCount').textContent = count;
+  const body = document.getElementById('cartBody');
+  const ftr = document.getElementById('cartFtr');
+  if(!cart.length){
+    body.innerHTML='<div class="cart-empty"><i class="fa-solid fa-cart-shopping"></i>Cart khali hai!<br><small>Koi product add karein</small></div>';
+    ftr.style.display='none';
+  } else {
+    body.innerHTML = cart.map(i=>`
+      <div class="cart-item">
+        <div class="ci-emoji">${i.emoji}</div>
+        <div class="ci-info">
+          <div class="ci-name">${i.name}</div>
+          <div class="ci-qty">Qty: ${i.qty}</div>
+          <div class="ci-price">Rs. ${(i.price*i.qty).toLocaleString()}</div>
+        </div>
+        <button class="remove-btn" onclick="removeItem(${i.id})"><i class="fa-solid fa-trash"></i></button>
+      </div>`).join('');
+    ftr.style.display='block';
+    document.getElementById('cartTotal').textContent = 'Rs. '+total.toLocaleString();
+  }
+}
+
+function checkout() {
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const msg = `Asslamualaikum! Mujhe yeh products chahiyein:%0A${cart.map(i=>`- ${i.name} x${i.qty} = Rs.${(i.price*i.qty).toLocaleString()}`).join('%0A')}%0A%0ATotal: Rs.${total.toLocaleString()}`;
+  window.open(`https://wa.me/923001234567?text=${msg}`,'_blank');
+}
+
+function openCart(){document.getElementById('cartOverlay').classList.add('open')}
+function closeCart(){document.getElementById('cartOverlay').classList.remove('open')}
+
+let dark = localStorage.getItem('ar_theme')==='dark';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  document.getElementById('themeIcon').className = dark?'fa-solid fa-sun':'fa-solid fa-moon';
+  localStorage.setItem('ar_theme',dark?'dark':'light');
+}
+function toggleTheme(){dark=!dark;applyTheme()}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// INIT
+applyTheme();
+renderCats();
+renderProducts(products);
+updateCartUI();
+
+// Listen for product updates from admin panel
+window.addEventListener('storage', e => {
+  if(e.key==='ar_products'){
+    products = JSON.parse(e.newValue||'[]');
+    filterCat(activecat);
+  }
+});
+</script>
+</body>
+</html>
