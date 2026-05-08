@@ -198,7 +198,7 @@ footer a:hover{color:var(--accent)}
     <div>
       <h4>Al-Riaz Electronics</h4>
       <p>Pakistan ka trusted electronics aur home appliances store. Quality products, best prices.</p>
-      <p style="margin-top:10px;font-weight:600;color:var(--text)"><i class="fa-solid fa-phone"></i> 0300-1234567</p>
+      <p style="margin-top:10px;font-weight:600;color:var(--text)"><i class="fa-solid fa-phone"></i> 0317-4074775</p>
       <p><i class="fa-brands fa-whatsapp" style="color:#25d366"></i> WhatsApp Available</p>
     </div>
     <div>
@@ -367,7 +367,7 @@ function updateCartUI() {
 function checkout() {
   const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
   const msg = `Asslamualaikum! Mujhe yeh products chahiyein:%0A${cart.map(i=>`- ${i.name} x${i.qty} = Rs.${(i.price*i.qty).toLocaleString()}`).join('%0A')}%0A%0ATotal: Rs.${total.toLocaleString()}`;
-  window.open(`https://wa.me/923001234567?text=${msg}`,'_blank');
+  window.open(`https://wa.me/+923174074775?text=${msg}`,'_blank');
 }
 
 function openCart(){document.getElementById('cartOverlay').classList.add('open')}
